@@ -13,7 +13,7 @@ printf "Day2 Part2: "
 cat day2/input.txt | bazelisk run //day2:part2 2>/dev/null
 
 printf "Day3 Part1: "
-cat day3/input.txt | bazel run //day3:part1 --copt="-DBITSIZE=12" 2>/dev/null
+cat day3/input.txt | bazelisk run //day3:part1 --copt="-DBITSIZE=12" 2>/dev/null
 
 printf "Day3 Part2: "
-cat day3/input.txt | bazel run //day3:part2 --copt="-DBITSIZE=12" 2>/dev/null
+cat day3/input.txt | bazelisk run //day3:part2 --copt="-DBITSIZE=12" 2>/dev/null
