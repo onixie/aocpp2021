@@ -17,3 +17,9 @@ cat day3/input.txt | bazelisk run //day3:part1 --copt="-DBITSIZE=12" 2>/dev/null
 
 printf "Day3 Part2: "
 cat day3/input.txt | bazelisk run //day3:part2 --copt="-DBITSIZE=12" 2>/dev/null
+
+printf "Day4 Part1: "
+cat day4/input.txt | bazelisk run //day4:part1
+
+# printf "Day4 Part2: "
+# cat day4/input.txt | bazelisk run //day4:part2
