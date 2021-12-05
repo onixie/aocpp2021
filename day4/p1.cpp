@@ -1,7 +1,6 @@
 #include "lib.hpp"
 
 std::tuple<uint, uint> play_bingo(Numbers const& numbers, Boards& boards);
-uint calc_score(Boards const& boards, std::tuple</*board index*/uint, /* number */uint> const& tp);
 
 int main() {
     Numbers numbers;
@@ -20,7 +19,7 @@ int main() {
     std::cerr<<"-----"<<std::endl;
     std::cerr<<boards;
 
-    std::cout<<calc_score(boards, res);
+    std::cout<<boards.score(res)<<std::endl;
     return 0;
 }
 
@@ -45,16 +44,4 @@ std::tuple<uint, uint> play_bingo(Numbers const& numbers, Boards& boards) {
                     return {b, n};
             }
     }
-}
-
-uint calc_score(Boards const& boards, std::tuple</*board index*/uint, /* number */uint> const& tp) {
-    auto board = boards.list[std::get<0>(tp)];
-    auto num = std::get<1>(tp);
-    auto sum = 0;
-    for(auto& row : board)
-        for(auto& cell : row) {
-            if (!std::get<1>(cell))
-                sum+=std::get<0>(cell);
-        }
-    return num*sum;
 }
