@@ -10,7 +10,26 @@ std::ostream& operator<<(std::ostream& out, LineSeg const& line) {
     return out;
 }
 std::ostream& operator<<(std::ostream& out, Vents const& vents) {
-    out<<vents.topLeft<<" x "<<vents.bottomRight;
+    out<<vents.topLeft<<" x "<<vents.bottomRight<<std::endl;
+    
+    for(auto& line: vents.lines) {
+        out<<line<<std::endl;
+    }
+    return out;
+}
+std::ostream& operator<<(std::ostream& out, Diagram const& diagram) {
+    uint c = 0;
+    for(auto& v: diagram.data_) {
+        if (v != 0) 
+            out<<v<<" ";
+        else
+            out<<". ";
+        c++;
+        if (c>=diagram.width_) {
+            out<<std::endl;
+            c=0;
+        }
+    }
     return out;
 }
 std::istream& operator>>(std::istream& in, LineSeg& point) {
