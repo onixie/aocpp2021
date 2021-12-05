@@ -5,12 +5,11 @@
 #include <tuple>
 #include <vector>
 #include <iostream>
+#include <array>
 
 struct Boards {
-    using BoardIndex = uint;
-    using Col = uint;
-    using Row = uint;
-    std::unordered_map<uint, std::tuple<BoardIndex, Col, Row>> lookupTable;
+    std::vector<std::array<std::array<std::tuple</*num*/uint,/*marker*/bool>, 5>,5>> list;  //list of 5x5 boards
+    std::unordered_map<uint, std::vector<std::tuple</*board index*/uint, /*col index*/uint, /*row index*/uint>>> lookupTable;
 };
 
 struct Numbers {
