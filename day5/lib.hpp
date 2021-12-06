@@ -26,12 +26,10 @@ struct Diagram {
         return data_[y*width_+x];
     }
     
-    uint count(uint t) const {
-        uint c = 0;
-        while(t > 1) {
-            c+=std::count(this->data_.cbegin(), this->data_.cend(), t--);
-        }
-        return c;
+    uint count_cross() const {
+        return std::count_if(this->data_.cbegin(), this->data_.cend(), [](auto c) {
+            return c > 1;
+        });
     }
     friend std::ostream& operator<<(std::ostream&, Diagram const&);
 
