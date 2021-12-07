@@ -4,7 +4,7 @@
 #include <vector>
 #include <iostream>
 
-using LanternFish = int;
+using LanternFish = ushort;
 using SchoolOfFish = std::vector<LanternFish>;
 
 std::ostream& operator<<(std::ostream&, SchoolOfFish const&);

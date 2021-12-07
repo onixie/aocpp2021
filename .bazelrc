@@ -1,1 +1,1 @@
-build --cxxopt=-std=c++17 --host_cxxopt=-std=c++17
+build --cxxopt=-O1 --cxxopt=-std=c++17 --host_cxxopt=-std=c++17 --cxxopt=-fstack-protector-all --linkopt="-Wl,-stack_size -W,1000000000"
