@@ -1,4 +1,5 @@
 #include "lib.hpp"
+#include <unordered_map>
 
 std::istream& operator>>(std::istream& in, Experiment& exp) 
 {
@@ -24,3 +25,16 @@ std::ostream& operator<<(std::ostream& out, Experiment const& exp)
     }
     return out;
 }
+
+Knowledge1 knowledge1 = { 
+    { 6, 0 }, 
+    { 2, 1 }, 
+    { 5, 2 }, 
+    { 5, 3 }, 
+    { 4, 4 }, 
+    { 5, 5 }, 
+    { 6, 6 }, 
+    { 3, 7 }, 
+    { 7, 8 },
+    { 6, 9 }, 
+};
