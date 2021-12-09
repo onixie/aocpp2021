@@ -1,9 +1,10 @@
 #include "lib.hpp"
+#include <ostream>
 #include <unordered_map>
 
 std::istream& operator>>(std::istream& in, Experiment& exp) 
 {
-    for(int i = 0; i < 10; i++)
+    for(int i = 0; i < 10; i++) 
         in >> std::get<0>(exp)[i];
 
     in.ignore(10, '|');
@@ -22,6 +23,25 @@ std::ostream& operator<<(std::ostream& out, Experiment const& exp)
     out<<"|";
     for(auto dsp : std::get<1>(exp)) {
         out<<" "<<dsp;
+    }
+    return out;
+}
+
+std::ostream& operator<<(std::ostream& out, Knowledge2 const& know) {
+    for(auto k : know) {
+        out<<k.first<<":";
+        for(auto c : k.second) {
+            out<<" "<<c;
+        }
+        out<<std::endl;
+    }
+    return out;
+}
+
+std::ostream& operator<<(std::ostream& out, Knowledge3 const& know) {
+    for(auto k : know) {
+        out<<k.first<<": "<<k.second;
+        out<<std::endl;
     }
     return out;
 }
