@@ -1,5 +1,12 @@
 #include "lib.hpp"
 
+const std::unordered_map<char, int> SCORE = {
+    {'}', 1197},
+    {']', 57},
+    {')', 3},
+    {'>', 25137},
+};
+
 int main() {
     Line chunks;
     int pts = 0;

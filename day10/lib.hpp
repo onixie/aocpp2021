@@ -11,9 +11,9 @@ struct Line{
     std::vector<char> data = {};
     std::optional<std::tuple<char, char>> invalid = std::nullopt;
     void clear();
+    std::vector<char> ac() const;
 };
 
-extern const std::unordered_map<char, int> SCORE;
 std::istream& operator>>(std::istream& in, Line& chunks);
 std::ostream& operator<<(std::ostream& out, Line const& chunks);
 
