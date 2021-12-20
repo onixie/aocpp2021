@@ -47,3 +47,6 @@ cat day8/input.txt | bazelisk run //day8:part1 2>/dev/null
 
 printf "Day8 Part2: "
 cat day8/input.txt | bazelisk run //day8:part2 2>/dev/null
+
+printf "Day9 Part1: "
+cat day9/input.txt | bazelisk run //day9:part1 2>/dev/null
