@@ -59,3 +59,9 @@ cat day10/input.txt | bazelisk run //day10:part1 2>/dev/null
 
 printf "Day10 Part2: "
 cat day10/input.txt | bazelisk run //day10:part2 2>/dev/null
+
+printf "Day11 Part1: "
+cat day11/input.txt | bazelisk run //day11:part1 2>/dev/null
+
+printf "Day11 Part2: "
+cat day11/input.txt | bazelisk run //day11:part2 2>/dev/null
