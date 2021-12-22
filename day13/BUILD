@@ -10,9 +10,8 @@ cc_binary(
     srcs = ["p1.cpp"],
     deps = [":lib"]
 )
-
 cc_binary(
     name = "part2",
     srcs = ["p2.cpp"],
-    deps = [":lib"],
+    deps = [":lib", "@ncurses//:main"],
 )
