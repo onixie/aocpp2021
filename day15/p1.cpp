@@ -23,8 +23,8 @@ int main() {
         //sleep(1);
         //std::cerr<<std::endl;
     }
-    std::cout<<risk<<std::endl;
     std::cerr<<cave;
+    std::cout<<risk<<std::endl;
     return 0;
 }
 
@@ -52,12 +52,15 @@ int dijkstra(Cavern& cave, MinChiton& mins) {
         int ax = min.x + m[0];
         int ay = min.y + m[1];
         if (can_move(cave, ax, ay)) {
+            auto old_total_risk = cave.chitons[ay][ax].total_risk;
             auto new_total_risk = cave.chitons[ay][ax].risk + min.total_risk;
 
-            if (cave.chitons[ay][ax].total_risk > new_total_risk)
+            if (old_total_risk == std::numeric_limits<size_t>::max()) {
+                cave.chitons[ay][ax].total_risk = new_total_risk;
+                mins.push(&cave.chitons[ay][ax]);
+            } else  if (cave.chitons[ay][ax].total_risk > new_total_risk)
                 cave.chitons[ay][ax].total_risk = new_total_risk;
             //std::cerr<<ax<<" "<<ay<<" "<<cave.chitons[ay][ax].total_risk<<std::endl;
-            mins.push(&cave.chitons[ay][ax]);
         }
     }
 

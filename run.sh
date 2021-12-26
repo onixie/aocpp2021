@@ -83,3 +83,6 @@ cat day14/input.txt | bazelisk run //day14:part1 2>/dev/null
 
 printf "Day14 Part1: "
 cat day14/input.txt | bazelisk run //day14:part2 --copt="-DPROCESS=40" 2>/dev/null
+
+printf "Day15 Part1: "
+cat day15/input.txt | bazelisk run //day15:part1 2>/dev/null
