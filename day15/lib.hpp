@@ -11,14 +11,14 @@
 #include <queue>
 
 struct Chiton {
-    Chiton(std::uint8_t risk, int x, int y): 
+    Chiton(std::int8_t risk, int x, int y): 
         risk(risk), 
         total_risk(std::numeric_limits<size_t>::max()), 
         x(x), 
         y(y), 
         visited(false)
     {}
-    std::uint8_t risk;
+    std::int8_t risk;
     size_t total_risk;
     int x; int y;
     bool visited;
@@ -37,5 +37,7 @@ using MinChiton = std::priority_queue<Chiton*, std::vector<Chiton*>, std::greate
 
 std::istream& operator>>(std::istream&, Cavern&);
 std::ostream& operator<<(std::ostream&, Cavern const&);
+
+int dijkstra(Cavern& cave, MinChiton& mins);
 
 #endif // _LIB_HPP_
