@@ -1,10 +1,12 @@
 #ifndef _LIB_HPP_
 #define _LIB_HPP_
 
+#include <algorithm>
 #include <cstddef>
 #include <cstdint>
 #include <queue>
 #include <functional>
+#include <iterator>
 #include <limits>
 #include <vector>
 #include <iostream>
@@ -33,11 +35,16 @@ struct Cavern {
     int height = 0;
 };
 
-using MinChiton = std::priority_queue<Chiton*, std::vector<Chiton*>, std::greater<Chiton*>>;
+// a min heap with min total_risk chitons at front
+struct MinChitons : std::vector<Chiton*> {
+    void push_back(Chiton* cp);
+    void pop_back();
+    void rebalance();
+};
 
 std::istream& operator>>(std::istream&, Cavern&);
 std::ostream& operator<<(std::ostream&, Cavern const&);
 
-int dijkstra(Cavern& cave, MinChiton& mins);
+int dijkstra(Cavern& cave, MinChitons& mins);
 
 #endif // _LIB_HPP_

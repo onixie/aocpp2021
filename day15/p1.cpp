@@ -12,7 +12,7 @@ int main() {
     std::cin>>cave;
     
     cave.chitons[0][0].total_risk = 0;
-    MinChiton mins; mins.push(&cave.chitons[0][0]);
+    MinChitons mins; mins.push_back(&cave.chitons[0][0]);
 
     int risk = -1;
     while((risk=dijkstra(cave, mins))==-1) {

@@ -1,7 +1,9 @@
 #include "lib.hpp"
 #include <algorithm>
+#include <functional>
 #include <iostream>
 #include <iterator>
+#include <queue>
 #include <vector>
 
 inline Chiton inc(Chiton const& c, int i, int x, int y, int width, int height) {
@@ -36,6 +38,7 @@ void extend_map(Cavern& cave) {
     cave.height*= 5;
 }
 
+
 int main() {
     Cavern cave;
     std::cin>>cave;
@@ -44,7 +47,7 @@ int main() {
     //std::cerr<<cave;
     
     cave.chitons[0][0].total_risk = 0;
-    MinChiton mins; mins.push(&cave.chitons[0][0]);
+    MinChitons mins; mins.push_back(&cave.chitons[0][0]);
 
     int risk = -1;
     while((risk=dijkstra(cave, mins))==-1) {
