@@ -5,6 +5,7 @@
 #include <vector>
 #include <iostream>
 #include <bitset>
+#include <optional>
 
 using BITStream=std::vector<std::uint8_t>;
 
@@ -20,7 +21,7 @@ struct BITS<TYPE, SIZE, true> {
     using store_type = BITStream::value_type;
     static constexpr size_t store_size = sizeof(store_type)*8;
 
-    virtual std::bitset<SIZE> parse(BITStream const& stream, size_t& index) {
+    std::bitset<SIZE> parse(BITStream const& stream, size_t& index) {
         std::bitset<SIZE> res;
 
         auto start = stream.cbegin() +  index / store_size;
@@ -54,5 +55,34 @@ struct BITSVer : BITS<std::uint32_t, 3> {};
 struct BITSTyp : BITS<std::uint32_t, 3> {};
 struct BITSLit : BITS<std::uint32_t, 5> {};
 struct BITSMod : BITS<std::uint32_t, 1> {};
+
+struct BITSLitPac : BITS<std::uint64_t, 0> {
+    std::string parse(BITStream const& stream, size_t& index) {
+        std::string res;
+        size_t idx;
+        BITSVer ver;
+        BITSTyp typ;
+
+        res+=ver.parse(stream, idx).to_string();
+        res+=typ.parse(stream, idx).to_string();
+
+        value = 0;
+        if (typ.value == 4) {
+            BITSLit lit;
+            do {
+                auto litp = lit.parse(stream, idx);
+                res+=litp.to_string();
+                value = (value<<4) + (0x0F&lit.value);
+                if (!litp.test(4))
+                    break;
+            } while (true);
+
+            index = idx;
+            return res;
+        } else {
+            return "";
+        }
+    }
+};
 
 #endif
