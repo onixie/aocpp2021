@@ -22,17 +22,16 @@ struct BITS<TYPE, SIZE, true> {
 
     virtual std::bitset<SIZE> parse(BITStream const& stream, size_t& index) {
         std::bitset<SIZE> res;
-        size_t end_index = index + SIZE;
-        BITStream::iterator::difference_type start = index / store_size;
-        BITStream::iterator::difference_type end   = end_index / store_size + 1;
+
+        auto start = stream.cbegin() +  index / store_size;
+        auto end   = stream.cbegin() + (index + SIZE) / store_size + 1;
         
-        // bit shift the rest
         auto left = index % store_size;
         auto pos = 0;
-        for(auto iter = stream.begin()+start; iter < stream.cbegin()+ end && pos < SIZE; iter++) {
-            store_type value = *iter<<left;
-            if (iter + 1 < stream.cbegin() + end)
-                value |= *(iter+1)>>(store_size-left);
+        for(auto curr = start; curr < end && pos < SIZE; curr++) {
+            store_type value = *curr<<left;
+            if (curr + 1 < end)
+                value |= *(curr+1)>>(store_size-left);
                 
             for(int i=store_size-1;i>=0;i--) {
                 if (pos < SIZE) {
@@ -43,7 +42,7 @@ struct BITS<TYPE, SIZE, true> {
             }
         }
 
-        index = end_index;
+        index += SIZE;
         this->value = res.to_ullong();
         return res;
     }
@@ -54,5 +53,6 @@ struct BITS<TYPE, SIZE, true> {
 struct BITSVer : BITS<std::uint32_t, 3> {};
 struct BITSTyp : BITS<std::uint32_t, 3> {};
 struct BITSLit : BITS<std::uint32_t, 5> {};
+struct BITSMod : BITS<std::uint32_t, 1> {};
 
 #endif

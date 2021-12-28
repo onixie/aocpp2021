@@ -9,36 +9,89 @@ int main() {
 
     std::cin>>bits;
     std::cerr<<bits<<std::endl;
-    std::cerr<<(bits<<1)<<std::endl;
-    std::cerr<<(bits<<2)<<std::endl;
-    std::cerr<<(bits<<3)<<std::endl;
-    std::cerr<<(bits<<4)<<std::endl;
-    std::cerr<<(bits<<5)<<std::endl;
-    std::cerr<<(bits<<6)<<std::endl;
-    std::cerr<<(bits<<7)<<std::endl;
-    std::cerr<<(bits<<8)<<std::endl;
-    std::cerr<<(bits<<9)<<std::endl;
-    std::cerr<<(bits<<10)<<std::endl;
-    std::cerr<<(bits<<11)<<std::endl;
+    {
+        BITSVer ver;
+        BITSTyp typ;
+        BITSLit lit;
+        size_t index = 0;
+        std::cerr<<ver.parse(bits, index)<<" "<<ver.value<<std::endl;
+        std::cerr<<typ.parse(bits, index)<<" "<<typ.value<<std::endl;
+        std::cerr<<lit.parse(bits, index)<<" "<<lit.value<<std::endl;
+        std::cerr<<lit.parse(bits, index)<<" "<<lit.value<<std::endl;
+        std::cerr<<lit.parse(bits, index)<<" "<<lit.value<<std::endl;
+    }
+    bits.clear();
+    std::cin>>bits;
+    std::cerr<<bits<<std::endl;
+    {
+        BITSVer ver;
+        BITSTyp typ;
+        BITSLit lit;
+        BITSMod mod;
+        BITS<std::uint32_t, 15> len;
+        size_t index = 0;
+        std::cerr<<ver.parse(bits, index)<<" "<<std::dec<<ver.value<<std::endl;
+        std::cerr<<typ.parse(bits, index)<<" "<<std::dec<<typ.value<<std::endl;
+        std::cerr<<mod.parse(bits, index)<<" "<<std::dec<<mod.value<<std::endl;
+        std::cerr<<len.parse(bits, index)<<" "<<std::dec<<len.value<<std::endl;
+        {
+            BITSVer ver;
+            BITSTyp typ;
+            BITSLit lit;
+            std::cerr<<ver.parse(bits, index)<<" "<<ver.value<<std::endl;
+            std::cerr<<typ.parse(bits, index)<<" "<<typ.value<<std::endl;
+            std::cerr<<lit.parse(bits, index)<<" "<<lit.value<<std::endl;
+        }
+        {
+            BITSVer ver;
+            BITSTyp typ;
+            BITSLit lit;
+            std::cerr<<ver.parse(bits, index)<<" "<<ver.value<<std::endl;
+            std::cerr<<typ.parse(bits, index)<<" "<<typ.value<<std::endl;
+            std::cerr<<lit.parse(bits, index)<<" "<<lit.value<<std::endl;
+            std::cerr<<lit.parse(bits, index)<<" "<<lit.value<<std::endl;
+        }
+    }
 
-    BITSVer ver;
-    BITSTyp typ;
-    BITSLit lit;
-    size_t index = 0;
-    std::cerr<<ver.parse(bits, index)<<" "<<ver.value<<std::endl;
-    std::cerr<<typ.parse(bits, index)<<" "<<typ.value<<std::endl;
-    std::cerr<<lit.parse(bits, index)<<" "<<lit.value<<std::endl;
-    std::cerr<<lit.parse(bits, index)<<" "<<lit.value<<std::endl;
-    std::cerr<<lit.parse(bits, index)<<" "<<lit.value<<std::endl;
-
-    index = 0;
-    std::cerr<<typ.parse(bits<<3, index)<<" "<<typ.value<<std::endl;
-
-    index = 0;
-    std::cerr<<lit.parse(bits<<11, index)<<" "<<lit.value<<std::endl;
-
-    index = 0;
-    std::cerr<<lit.parse(bits<<16, index)<<" "<<lit.value<<std::endl;
+    bits.clear();
+    std::cin>>bits;
+    std::cerr<<bits<<std::endl;
+    {
+        BITSVer ver;
+        BITSTyp typ;
+        BITSLit lit;
+        BITSMod mod;
+        BITS<std::uint32_t, 11> len;
+        size_t index = 0;
+        std::cerr<<ver.parse(bits, index)<<" "<<std::dec<<ver.value<<std::endl;
+        std::cerr<<typ.parse(bits, index)<<" "<<std::dec<<typ.value<<std::endl;
+        std::cerr<<mod.parse(bits, index)<<" "<<std::dec<<mod.value<<std::endl;
+        std::cerr<<len.parse(bits, index)<<" "<<std::dec<<len.value<<std::endl;
+        {
+            BITSVer ver;
+            BITSTyp typ;
+            BITSLit lit;
+            std::cerr<<ver.parse(bits, index)<<" "<<ver.value<<std::endl;
+            std::cerr<<typ.parse(bits, index)<<" "<<typ.value<<std::endl;
+            std::cerr<<lit.parse(bits, index)<<" "<<lit.value<<std::endl;
+        }
+        {
+            BITSVer ver;
+            BITSTyp typ;
+            BITSLit lit;
+            std::cerr<<ver.parse(bits, index)<<" "<<ver.value<<std::endl;
+            std::cerr<<typ.parse(bits, index)<<" "<<typ.value<<std::endl;
+            std::cerr<<lit.parse(bits, index)<<" "<<lit.value<<std::endl;
+        }
+        {
+            BITSVer ver;
+            BITSTyp typ;
+            BITSLit lit;
+            std::cerr<<ver.parse(bits, index)<<" "<<ver.value<<std::endl;
+            std::cerr<<typ.parse(bits, index)<<" "<<typ.value<<std::endl;
+            std::cerr<<lit.parse(bits, index)<<" "<<lit.value<<std::endl;
+        }
+    }
     return 0;
 }
 

@@ -13,8 +13,11 @@ std::istream& operator>>(std::istream& in, BITStream& stream){
 
     do {
         char lb, hb;
-        in>>lb>>hb;
-        if (in.eof())
+        lb=in.get();
+        if (in.eof() || lb == '\n' || lb == '\r')
+            return in;
+        hb=in.get();
+        if (in.eof() || hb == '\n' || hb == '\r')
             return in;
         std::string s = {lb, hb};
         auto n = 0xFFUL&std::stoul(s, 0, 16);
