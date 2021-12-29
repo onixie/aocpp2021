@@ -1,11 +1,15 @@
 #ifndef _LIB_HPP_
 #define _LIB_HPP_
 
+#include <cstddef>
 #include <cstdint>
+#include <functional>
+#include <memory>
+#include <string>
 #include <vector>
 #include <iostream>
 #include <bitset>
-#include <optional>
+#include <functional>
 
 using BITStream=std::vector<std::uint8_t>;
 
@@ -18,12 +22,14 @@ struct BITS;
 
 template<class TYPE, int SIZE>
 struct BITS<TYPE, SIZE, true> {
+    protected:
     using store_type = BITStream::value_type;
     static constexpr size_t store_size = sizeof(store_type)*8;
-
-    std::bitset<SIZE> parse(BITStream const& stream, size_t& index) {
-        std::bitset<SIZE> res;
-
+    public:
+    std::bitset<SIZE> bits;
+    TYPE value;
+    auto operator()(BITStream const& stream, size_t& index) {
+        bits.reset();
         auto start = stream.cbegin() +  index / store_size;
         auto end   = stream.cbegin() + (index + SIZE) / store_size + 1;
         
@@ -36,7 +42,7 @@ struct BITS<TYPE, SIZE, true> {
                 
             for(int i=store_size-1;i>=0;i--) {
                 if (pos < SIZE) {
-                    res.set(SIZE-(pos++)-1, 0x1&(value>>i));
+                    bits.set(SIZE-(pos++)-1, 0x1&(value>>i));
                 } else {
                     break;
                 }
@@ -44,11 +50,9 @@ struct BITS<TYPE, SIZE, true> {
         }
 
         index += SIZE;
-        this->value = res.to_ullong();
-        return res;
+        this->value = bits.to_ullong();
+        return bits;
     }
-
-    TYPE value;
 };
 
 struct BITSVer : BITS<std::uint32_t, 3> {};
@@ -56,33 +60,29 @@ struct BITSTyp : BITS<std::uint32_t, 3> {};
 struct BITSLit : BITS<std::uint32_t, 5> {};
 struct BITSMod : BITS<std::uint32_t, 1> {};
 
-struct BITSLitPac : BITS<std::uint64_t, 0> {
-    std::string parse(BITStream const& stream, size_t& index) {
-        std::string res;
-        size_t idx;
-        BITSVer ver;
-        BITSTyp typ;
-
-        res+=ver.parse(stream, idx).to_string();
-        res+=typ.parse(stream, idx).to_string();
-
-        value = 0;
-        if (typ.value == 4) {
-            BITSLit lit;
-            do {
-                auto litp = lit.parse(stream, idx);
-                res+=litp.to_string();
-                value = (value<<4) + (0x0F&lit.value);
-                if (!litp.test(4))
-                    break;
-            } while (true);
-
-            index = idx;
-            return res;
-        } else {
-            return "";
-        }
-    }
+struct BITSPacBase {
+    enum Pack {
+        Invalid,
+        Op,
+        Lv,
+    } pack = Invalid;
+    virtual std::string operator()(BITStream const& stream, size_t& index) = 0;
+    std::string bits;
+    BITSVer ver;
+    BITSTyp typ;
 };
 
+struct BITSLvPac : BITSPacBase {
+    std::uint64_t value = 0;
+    std::string operator()(BITStream const& stream, size_t& index);
+};
+
+struct BITSOpPac : BITSPacBase {
+    BITSMod mod;
+    std::vector<std::unique_ptr<BITSPacBase>> subpacs = {};
+    std::string operator()(BITStream const& stream, size_t& index);
+};
+
+std::ostream& operator<<(std::ostream&, BITSLvPac const&);
+std::ostream& operator<<(std::ostream&, BITSOpPac const&);
 #endif
