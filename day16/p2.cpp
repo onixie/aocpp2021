@@ -4,9 +4,13 @@
 #include <iostream>
 #include <numeric>
 #include <cassert>
+#include <ostream>
+#include <string>
+#include <sstream>
 
 std::string calculate(BITSPacBase* p);
 std::uint64_t calculate2(BITSPacBase* p);
+std::string translate(BITSPacBase* p);
 
 int main() {
     do {
@@ -15,21 +19,86 @@ int main() {
     std::cerr<<bits<<std::endl;
     
     size_t index = 0;
-    auto p = parse(bits, index); print(p);
+    auto p = parse(bits, index); //print(p);
 
+    std::cout<<translate(p.get())<<std::endl; // feed output expr to https://ideone.com/
     auto ret = calculate(p.get());
     std::cout<<std::bitset<64>(ret).to_ullong()<<" ("<<ret<<")"<<std::endl;
     std::cout<<calculate2(p.get())<<std::endl;
     } while(!std::cin.eof());
 
-    //std::cout<<add_bits("111000", "1100000000")<<std::endl;
-    //std::cout<<add_bits(std::string("110"), std::string("0"))<<std::endl;
-    //std::cout<<mul_bits("100", "0100")<<std::endl;
-    //std::cout<<(std::string("101")>std::string("0100"))<<std::endl;
     return 0;
 }
 
-std::string calculate(BITSPacBase* p) {
+std::string translate(BITSPacBase* p) {
+    if (p->pack == BITSPacBase::Op) {
+        std::vector<std::string> ret;
+
+        for(auto& sp: static_cast<BITSOpPac*>(p)->subpacs) {
+            ret.push_back(translate(sp.get()));
+        }
+
+        std::string s;
+        switch(p->typ.value) {
+            case 0: {//sum 
+            s="(+"; 
+            break;
+            }
+            case 1: {//product
+            s="(*"; 
+            break;
+            }
+            case 2: {//min
+            s="(min"; 
+            break;
+            }
+            case 3: {//max
+            s="(max"; 
+            break;
+            }
+            case 5: {//gt
+            s="(if (>";
+            break;
+            }
+            case 6: {//lt
+            s="(if (<";
+            break;
+            }
+            case 7: {//eq
+            s="(if (=";
+            break;
+            }
+            default:
+            assert(false);
+        }
+        for(auto& v:ret) s+=" "+v;
+        switch(p->typ.value) {
+            case 5: //gt
+            case 6: //lt
+            case 7: {//eq
+            s+=") 1 0)";
+            break;
+            }
+            default:
+            s+=")";
+            break;
+        }
+        return s;
+    }
+    
+    if (p->pack == BITSPacBase::Lv) {
+        std::stringstream ss; std::string v;
+        ss<<static_cast<BITSLvPac*>(p)->value;
+        ss>>v;
+        return v;
+    }
+
+    std::cerr<<"Encounter inavlid packet!"<<std::endl;
+    assert(false);
+    return "";
+}
+
+std::string calculate(BITSPacBase* p) { // fixme: what is wrong?
     if (p->pack == BITSPacBase::Op) {
         std::vector<std::string> ret;
 
@@ -73,8 +142,7 @@ std::string calculate(BITSPacBase* p) {
     return "";
 }
 
-
-std::uint64_t calculate2(BITSPacBase* p) {
+std::uint64_t calculate2(BITSPacBase* p) { // fixme: integer overflow?
     if (p->pack == BITSPacBase::Op) {
         std::vector<std::uint64_t> ret;
 
