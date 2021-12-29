@@ -83,6 +83,14 @@ struct BITSOpPac : BITSPacBase {
     std::string operator()(BITStream const& stream, size_t& index);
 };
 
+std::unique_ptr<BITSPacBase> parse(BITStream const& stream, size_t& index);
+void print(std::unique_ptr<BITSPacBase>& pac, std::ostream& out=std::cerr);
+
 std::ostream& operator<<(std::ostream&, BITSLvPac const&);
 std::ostream& operator<<(std::ostream&, BITSOpPac const&);
+
+std::string add_bits(std::string const&, std::string const&);
+std::string mul_bits(std::string const&, std::string const&);
+bool operator>(std::string const&, std::string const&);
+
 #endif

@@ -7,7 +7,7 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
-
+#include <cassert>
 
 std::istream& operator>>(std::istream& in, BITStream& stream){
     do {
@@ -77,6 +77,17 @@ inline std::unique_ptr<BITSPacBase> parse(BITStream const& stream, size_t& index
     return {};
 }
 
+void print(std::unique_ptr<BITSPacBase>& pac, std::ostream& out){
+    switch(pac->pack) {
+        case BITSPacBase::Lv:
+        out<<*static_cast<BITSLvPac*>(pac.get());
+        break;
+        case BITSPacBase::Op:
+        out<<*static_cast<BITSOpPac*>(pac.get());
+        break;
+    }
+}
+
 std::string BITSLvPac::operator()(BITStream const& stream, size_t& index) {
     size_t idx=index;
 
@@ -95,6 +106,8 @@ std::string BITSLvPac::operator()(BITStream const& stream, size_t& index) {
 
         index = idx;
         pack = Lv;
+
+        assert(bits.length() < 57);
         return bits;
     } else {
         bits="";
@@ -178,3 +191,36 @@ std::ostream& operator<<(std::ostream& out, BITSOpPac const& pac) {
     
     return out;
 }
+
+std::string add_bits(std::string const& bits1, std::string const& bits2) {
+    std::stringstream ss;
+    auto b1 = bits1.crbegin();
+    auto b2 = bits2.crbegin();
+    int c = 0;
+    while(b1 != bits1.crend() || b2 != bits2.crend() ){
+        int n1 = 0; int n2 = 0;
+
+        if (b1 != bits1.crend()) {
+            n1 = *b1 - '0';
+            b1++;
+        }
+        if (b2 != bits2.crend()) {
+            n2 = *b2 - '0';
+            b2++;
+        }
+
+        int s = n1+n2+c;
+        c = (0x2&s)>>1;
+        s=0x1&s;
+
+        ss<<s;
+    }
+
+    if (c) ss<<c;
+    std::string s;
+    ss>>s;
+    std::reverse(s.begin(), s.end());
+    return s;
+}
+std::string mul_bits(std::string const&, std::string const&);
+bool operator>(std::string const&, std::string const&);
