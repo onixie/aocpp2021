@@ -74,6 +74,7 @@ struct BITSPacBase {
 
 struct BITSLvPac : BITSPacBase {
     std::uint64_t value = 0;
+    std::string raw_value;
     std::string operator()(BITStream const& stream, size_t& index);
 };
 
@@ -92,5 +93,6 @@ std::ostream& operator<<(std::ostream&, BITSOpPac const&);
 std::string add_bits(std::string const&, std::string const&);
 std::string mul_bits(std::string const&, std::string const&);
 bool operator>(std::string const&, std::string const&);
-
+//bool operator==(std::string const& bits1, std::string const& bits2);
+bool operator<(std::string const& bits1, std::string const& bits2);
 #endif

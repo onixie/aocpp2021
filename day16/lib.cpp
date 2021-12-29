@@ -99,6 +99,7 @@ std::string BITSLvPac::operator()(BITStream const& stream, size_t& index) {
         do {
             auto l = lit(stream, idx);
             bits+=l.to_string();
+            raw_value+=l.to_string().substr(1);
             value = (value<<4) + (0x0F&lit.value);
             if (!l.test(4))
                 break;
@@ -162,7 +163,7 @@ std::ostream& operator<<(std::ostream& out, BITSLvPac const& pac) {
     out<<"bin: "<<pac.bits<<std::endl;
     out<<"version: "<<std::dec<<pac.ver.value<<std::endl;
     out<<"type: "<<std::dec<<pac.typ.value<<std::endl;
-    out<<"value: "<<std::dec<<pac.value<<std::endl;
+    out<<"value: "<<std::dec<<pac.value<<" ("<<pac.raw_value<<")"<<std::endl;
     return out;
 }
 std::ostream& operator<<(std::ostream& out, BITSOpPac const& pac) {
@@ -193,18 +194,25 @@ std::ostream& operator<<(std::ostream& out, BITSOpPac const& pac) {
 }
 
 std::string add_bits(std::string const& bits1, std::string const& bits2) {
+    if (bits1.empty())
+        return bits2;
+
+    if (bits2.empty())
+        return bits1;
+
     std::stringstream ss;
     auto b1 = bits1.crbegin();
     auto b2 = bits2.crbegin();
     int c = 0;
-    while(b1 != bits1.crend() || b2 != bits2.crend() ){
-        int n1 = 0; int n2 = 0;
+    while(b1 < bits1.crend() || b2 < bits2.crend()) {
+        int n1 = 0; 
+        int n2 = 0;
 
-        if (b1 != bits1.crend()) {
+        if (b1 < bits1.crend()) {
             n1 = *b1 - '0';
             b1++;
         }
-        if (b2 != bits2.crend()) {
+        if (b2 < bits2.crend()) {
             n2 = *b2 - '0';
             b2++;
         }
@@ -217,10 +225,57 @@ std::string add_bits(std::string const& bits1, std::string const& bits2) {
     }
 
     if (c) ss<<c;
-    std::string s;
+    std::string s="";
     ss>>s;
     std::reverse(s.begin(), s.end());
     return s;
 }
-std::string mul_bits(std::string const&, std::string const&);
-bool operator>(std::string const&, std::string const&);
+
+std::string mul_bits(std::string const& bits1, std::string const& bits2) {
+    auto b2 = bits2.crbegin();
+    std::string sum="0";
+    while(b2 < bits2.crend()) {
+        if (*b2 - '0') {
+            auto shift = std::llabs(std::distance(bits2.crbegin(),b2));
+            std::string part = bits1 + std::string(shift, '0');
+            sum = add_bits(sum, part);
+        }
+        b2++;
+    }
+    return sum;
+}
+
+// bool operator==(std::string const& bits1, std::string const& bits2) {
+//     // if (bits1.end() - (bits1.begin()+bits1.find_first_not_of('0')) > bits2.end() - (bits2.begin()+bits2.find_first_not_of('0')))
+//     //     return false;
+
+//     // if (bits1.end() - (bits1.begin()+bits1.find_first_not_of('0')) < bits2.end() - (bits2.begin()+bits2.find_first_not_of('0')))
+//     //     return false;
+
+//     return bits1.substr(bits1.find_first_not_of('0')) == bits2.substr(bits2.find_first_not_of('0'));
+// }
+
+bool operator<(std::string const& bits1, std::string const& bits2) {
+    return bits2>bits1;
+}
+
+bool operator>(std::string const& bits1, std::string const& bits2) {
+    if (bits1.end() - (bits1.begin()+bits1.find_first_not_of('0')) > bits2.end() - (bits2.begin()+bits2.find_first_not_of('0')))
+        return true;
+    
+    if (bits1.end() - (bits1.begin()+bits1.find_first_not_of('0')) < bits2.end() - (bits2.begin()+bits2.find_first_not_of('0')))
+        return false;
+
+    auto b1 = bits1.cbegin()+bits1.find_first_not_of('0');
+    auto b2 = bits1.cbegin()+bits2.find_first_not_of('0');
+
+    while(b1 < bits1.end() || b2 < bits2.end()) {
+        if (*b1 > *b2)
+            return true;
+        if (*b1 < *b2)
+            return false;
+        b1++;
+        b2++;
+    }
+    return false;
+}
